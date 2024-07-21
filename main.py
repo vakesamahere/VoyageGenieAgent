@@ -5,6 +5,8 @@ from agents import RedditAgents
 from tasks import RedditTasks
 
 from Tools.search_reddit import RedditSearch
+from Tools.get_route import GetRoute
+
 from langchain.schema import AgentFinish
 from typing import Union, List, Tuple, Dict
 # from file_io import save_markdown
@@ -123,9 +125,9 @@ agent_finishes = []
 agents = RedditAgents()
 tasks = RedditTasks()
 
-reddit_search_tool = RedditSearch()
+get_route=GetRoute()
 
-search_agent =agents.reddit_researcher(llm, reddit_search_tool)
+route_planner = agents.routePlanner(llm,tools=[get_route])
 # translate_agent = agents.translator()
 
 """
@@ -147,19 +149,11 @@ Rules for defining Reddit search input parameters:
     )
 """
 # Initialize Reddit search input parameters.
-query = "*"
-subreddit = "LocalLLaMA"
-limit = "15"
-time_filter="day"
-sort="hot"
+events=['上海大学','同济大学','复旦']
 
-research_report = tasks.search_reddit(
-    agent=search_agent,
-    query=query,
-    sort=sort,
-    time_filter=time_filter,
-    subreddit=subreddit,
-    limit=limit,    
+get_route_task = tasks.get_route(
+    agent=route_planner,
+    events=events
 )
 # translate_report = tasks.translate_report(
 #     agent=translate_agent,
@@ -168,10 +162,10 @@ research_report = tasks.search_reddit(
 
 # Create a new Crew instance
 crew = Crew(
-    agents=[search_agent,
+    agents=[route_planner,
             # translate_agent
             ],
-    tasks=[research_report,
+    tasks=[get_route_task,
             # translate_report
             ],
     process=Process.sequential,

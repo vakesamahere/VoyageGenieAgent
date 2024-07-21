@@ -71,3 +71,55 @@ class RedditAgents():
             max_iter=10,
             # tools=[search_tool, ContentTools.read_content],
         )
+
+    # 需求分析，聊天
+    def talker(self, llm):
+        return Agent(
+            role="talker",
+            goal="和用户畅快聊天，并且询问用户有关旅游的需求",
+            backstory="""作为一个善于交谈的人，你想尽可能帮用户解决旅游相关的问题。但是你没有能力解决，所以你发挥自身优势，引导用户向你透露更多他们的旅游需求和爱好。你想知道他们从哪里出发，想去哪里旅游，喜欢玩什么。由于自身能力的缺乏，得知用户需求之后，你会委托其他人帮你完成任务。 """,
+            verbose=True,
+            llm=llm,
+            allow_delegation=True,
+            max_iter=2,
+            # tools=[search_tool, ContentTools.read_content],
+        )
+    
+    # 路线规划
+    def routePlanner(self, llm, tools=[]):
+        return Agent(
+            role="planner",
+            goal="帮用户解决和路线分析相关的问题，提出足够的路线方案，让用户一目了然如何旅行。",
+            backstory="""作为一个对于路线规划颇有研究的人，你想尽可能帮用户解决旅游中关于路线的问题。路线相关的问题有且只有两类。第一，出发地和目的地的往返路线与出行方案；第二，在目的地的具体游玩路线与出行方案。你深信不疑：面对问题要先分成上述两类的其中一类，而且一定要使用工具解决问题。 """,
+            verbose=True,
+            llm=llm,
+            allow_delegation=False,
+            max_iter=2,
+            tools=tools,
+        )
+    
+    # 景点查找
+    def eventFinder(self, llm, tools=[]):
+        return Agent(
+            role="知道当地有哪些值得一去的地方的人",
+            goal="为用户提供有关游玩地区的有趣景点、优质饭店、合适住所。",
+            backstory="""你对用户想要去游玩的城市内部特别了解，你深信利用工具能根据用户的兴趣找到适合他们的游玩地点。你乐于推荐三类地方：游玩处、餐厅、住所""",
+            verbose=True,
+            llm=llm,
+            allow_delegation=False,
+            max_iter=2,
+            tools=tools,
+        )
+    
+    # 景点介绍
+    def eventTeller(self, llm, tools=[]):
+        return Agent(
+            role="知道某个地方具体信息的人",
+            goal="为用户提供有关某个地方的详细的和旅游相关的信息。",
+            backstory="""你善于利用工具找到任何一个地点的详细信息。为了解决用户的需求，你将旅游有关的信息和用户分享""",
+            verbose=True,
+            llm=llm,
+            allow_delegation=False,
+            max_iter=2,
+            tools=tools,
+        )

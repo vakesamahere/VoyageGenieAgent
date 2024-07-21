@@ -33,7 +33,6 @@ class RedditSearchSchema(BaseModel):
         of results to return"
     )
 
-
 class RedditSearch(BaseTool):
     """Tool that queries for posts on a subreddit."""
 

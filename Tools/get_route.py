@@ -10,7 +10,7 @@ from langchain_core.tools import BaseTool
 class GetRouteSchema(BaseModel):
     """Input"""
 
-    events: str = Field(
+    events: List[str] = Field(
         description="所有需要途径的地点组成的字符串,用英文逗号隔开"
     )
 
@@ -25,11 +25,11 @@ class GetRoute(BaseTool):
 
     def _run(
         self,
-        events: str
+        events: List[str]
     ) -> str:
         """Use the tool."""
         resultStrings=[]
-        events=events.split(',')
+        #events=events.split(',')
         for i in range(len(events)-1):
             resultStrings.append(f"从{events[i]}坐22路公交车到{events[i+1]}")
         return ",再".join(resultStrings)+'.'
